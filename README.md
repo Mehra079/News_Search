@@ -33,6 +33,15 @@ The News Search Microservice allows users to search for news articles based on a
 
 You can view the API documentation at [Swagger UI](http://localhost:8080/swagger-ui.html).
 
+### Data Flow Explanation
+User Interaction: The user initiates a search via a client (UI/Postman).
+API Request: The client sends a request to the /api/news/search endpoint with the required parameters.
+Fetch Articles: The service fetches articles from the NewsAPI.
+Caching: If the service is in online mode, it caches the fetched articles for offline use.
+Group Articles: The service groups the articles based on the specified intervals.
+Response: The grouped articles are returned as a response to the user.
+
+
 ## API Endpoints
 
 ### `GET /api/news/search`
