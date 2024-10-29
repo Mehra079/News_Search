@@ -22,6 +22,7 @@ The News Search Microservice allows users to search for news articles based on a
 ### Prerequisites
 
 - Java 11 or later
+- Angular
 - Maven
 - Spring Boot
 
