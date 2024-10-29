@@ -1,0 +1,18 @@
+<!-- src/app/components/news/news.component.html -->
+<div *ngIf="intervalGroups.length > 0">
+  <div *ngFor="let group of intervalGroups">
+    <h3>Interval: {{ group.interval }}</h3>
+    <p>Articles Count: {{ group.count }}</p>
+    <ul>
+      <li *ngFor="let article of group.articles">
+        <h4>{{ article.title }}</h4>
+        <p>{{ article.description }}</p>
+        <a [href]="article.url" target="_blank">Read more</a>
+        <p>Published at: {{ article.publishedAt }}</p>
+      </li>
+    </ul>
+  </div>
+</div>
+<div *ngIf="intervalGroups.length === 0">
+  <p>No results found.</p>
+</div>

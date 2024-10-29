@@ -1,0 +1,24 @@
+<!-- src/app/app.component.html -->
+<div class="search-container">
+  <h1>News Search</h1>
+  <input [(ngModel)]="keyword" placeholder="Enter keyword" />
+  <input [(ngModel)]="interval" type="number" placeholder="Interval" />
+  <select [(ngModel)]="intervalUnit">
+    <option value="minutes">Minutes</option>
+    <option value="hours" selected>Hours</option>
+    <option value="days">Days</option>
+    <option value="weeks">Weeks</option>
+    <option value="months">Months</option>
+    <option value="years">Years</option>
+  </select>
+  
+  <!-- Use (change) event to immediately apply offlineMode toggle -->
+  <label>
+    <input type="checkbox" [(ngModel)]="offlineMode" (change)="searchNews()" />
+    Offline Mode
+  </label>
+  
+  <button (click)="searchNews()">Search</button>
+</div>
+
+<app-news></app-news>
