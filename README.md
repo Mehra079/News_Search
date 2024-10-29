@@ -1,6 +1,9 @@
 # News_Search
  The News Search Microservice allows users to search for news articles based on a keyword.
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 # News Search Microservice
 
 ## Overview
@@ -33,6 +36,7 @@ The News Search Microservice allows users to search for news articles based on a
 
 You can view the API documentation at [Swagger UI](http://localhost:8080/swagger-ui.html).
 
+<<<<<<< Updated upstream
 ### Data Flow Explanation
 User Interaction: The user initiates a search via a client (UI/Postman).
 API Request: The client sends a request to the /api/news/search endpoint with the required parameters.
@@ -42,6 +46,8 @@ Group Articles: The service groups the articles based on the specified intervals
 Response: The grouped articles are returned as a response to the user.
 
 
+=======
+>>>>>>> Stashed changes
 ## API Endpoints
 
 ### `GET /api/news/search`
@@ -66,10 +72,17 @@ Response: The grouped articles are returned as a response to the user.
 
 ## Sequence Diagram
 
+<<<<<<< Updated upstream
 ![image](https://github.com/user-attachments/assets/c8850e58-2b62-441f-a16e-3d1a04d9541c)
 
+=======
+![Sequence Diagram](sequence_diagram.png) 
+>>>>>>> Stashed changes
 
 ## Conclusion
 
 This documentation serves as a guide for developers working on or maintaining the backend service. Feel free to contribute or report issues as necessary.
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
