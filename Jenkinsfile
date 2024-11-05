@@ -1,11 +1,6 @@
 pipeline {
     agent any
-    
-    environment {
-        GIT_CURL_VERBOSE = "1" // Enables detailed output for debugging
-        GIT_TRACE = "1" // Enables tracing to help identify issues
-    }
-
+  
     stages {
         stage('Checkout') {
             steps {
@@ -15,7 +10,6 @@ pipeline {
                         bat 'git config --global http.version HTTP/1.1'
                         bat 'git config --global http.postBuffer 524288000' // 500 MB
                         bat 'git config --global http.maxRequestBuffer 524288000' // 500 MB
-                        bat 'git config --global core.compression 0' // Disable compression
                     }
                     // Clone the repository with shallow depth to reduce data load
                     checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/Mehra079/News_Search.git']], extensions: [[$class: 'CloneOption', depth: 1]]])
