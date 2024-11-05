@@ -11,8 +11,9 @@ pipeline {
             steps {
                 script {
                     // Increase the buffer size to avoid EOF errors
-                    sh 'git config --global http.postBuffer 524288000' // 500 MB
-                    sh 'git config --global http.maxRequestBuffer 524288000' // 500 MB
+                    bat 'git config --global http.version HTTP/1.1'
+                    bat 'git config --global http.postBuffer 524288000' // 500 MB
+                    bat 'git config --global http.maxRequestBuffer 524288000' // 500 MB
                 }
                 // Clone the repository with shallow depth to reduce data load
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/Mehra079/News_Search.git']], extensions: [[$class: 'CloneOption', depth: 1]]])
@@ -24,11 +25,7 @@ pipeline {
                 dir('backend') {
                     // Build backend project
                     script {
-                        try {
-                            sh './mvnw clean install -DskipTests' // For Linux/MacOS
-                        } catch (Exception e) {
-                            bat 'mvnw.cmd clean install -DskipTests' // For Windows
-                        }
+                        bat 'mvnw.cmd clean install -DskipTests'
                     }
                 }
             }
@@ -39,11 +36,7 @@ pipeline {
                 dir('backend') {
                     // Run tests
                     script {
-                        try {
-                            sh './mvnw test' // For Linux/MacOS
-                        } catch (Exception e) {
-                            bat 'mvnw.cmd test' // For Windows
-                        }
+                        bat 'mvnw.cmd test' 
                     }
                 }
             }
@@ -54,19 +47,11 @@ pipeline {
                 dir('frontend') {
                     // Install Node dependencies
                     script {
-                        try {
-                            sh 'npm install' // For Linux/MacOS
-                        } catch (Exception e) {
-                            bat 'npm install' // For Windows
-                        }
+                        bat 'npm install'
                     }
                     // Build the Angular project
                     script {
-                        try {
-                            sh 'ng build --prod' // For Linux/MacOS
-                        } catch (Exception e) {
-                            bat 'ng build --prod' // For Windows
-                        }
+                        bat 'ng build --prod'
                     }
                 }
             }
