@@ -2,22 +2,20 @@ pipeline {
     agent any
     
     environment {
-        GIT_CURL_VERBOSE = "1"
-        GIT_TRACE = "1"
-        GIT_HTTP_MAX_REQUEST_BUFFER = "500M"
+        GIT_CURL_VERBOSE = "1" // Enables detailed output for debugging
+        GIT_TRACE = "1" // Enables tracing to help identify issues
     }
 
     stages {
         stage('Checkout') {
             steps {
                 script {
-                    // Increase buffer size for large repositories
-                    bat 'git config --global http.postBuffer 524288000'
-                    bat 'git config --global http.maxRequestBuffer 524288000'
-                    bat 'git config --global http.version HTTP/1.1'
+                    // Increase the buffer size to avoid EOF errors
+                    sh 'git config --global http.postBuffer 524288000' // 500 MB
+                    sh 'git config --global http.maxRequestBuffer 524288000' // 500 MB
                 }
-                // Clone the repository
-                git branch: 'main', url: 'https://github.com/Mehra079/News_Search.git'
+                // Clone the repository with shallow depth to reduce data load
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/Mehra079/News_Search.git']], extensions: [[$class: 'CloneOption', depth: 1]]])
             }
         }
         
