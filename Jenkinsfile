@@ -6,12 +6,11 @@ pipeline {
             steps {
                 retry(3){
                     script {
-                        // Increase the buffer size to avoid EOF errors
                         bat 'git config --global http.version HTTP/1.1'
                         bat 'git config --global http.postBuffer 524288000' // 500 MB
                         bat 'git config --global http.maxRequestBuffer 524288000' // 500 MB
                     }
-                    // Clone the repository with shallow depth to reduce data load
+                    // Clone the repository
                     checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/Mehra079/News_Search.git']], extensions: [[$class: 'CloneOption', depth: 1]]])
                 }
             }
@@ -53,18 +52,9 @@ pipeline {
                 }
             }
         }
-        
-        stage('Archive Artifacts') {
-            steps {
-                // Archive built artifacts (JAR from backend and Angular dist folder)
-                archiveArtifacts artifacts: 'backend/target/*.jar', allowEmptyArchive: true
-                archiveArtifacts artifacts: 'frontend/dist/**/*', allowEmptyArchive: true
-            }
-        }
 
         stage('Deploy') {
             steps {
-                // Here you can add deployment steps, e.g., Docker build & push, SCP to server, etc.
                 echo 'Deployment step (to be configured based on your deployment target)'
             }
         }
@@ -72,7 +62,6 @@ pipeline {
 
     post {
         always {
-            // Clean up workspace after build
             cleanWs()
         }
         success {
