@@ -1,12 +1,22 @@
 pipeline {
     agent any
+    
+    environment {
+        GIT_CURL_VERBOSE = "1"
+        GIT_TRACE = "1"
+        GIT_HTTP_MAX_REQUEST_BUFFER = "500M"
+    }
 
     stages {
         stage('Checkout') {
             steps {
+                script {
+                    // Increase buffer size for large repositories
+                    sh 'git config --global http.postBuffer 524288000'
+                    sh 'git config --global http.maxRequestBuffer 524288000'
+                    sh 'git config --global http.version HTTP/1.1'
+                }
                 // Clone the repository
-                sh 'git config --global http.postBuffer 524288000'
-                sh 'git config --global http.version HTTP/1.1'
                 git branch: 'main', url: 'https://github.com/Mehra079/News_Search.git'
             }
         }
