@@ -1,62 +1,93 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_IMAGE_BACKEND = 'my-backend:latest'
-        DOCKER_IMAGE_FRONTEND = 'my-frontend:latest'
-    }
-
     stages {
-        stage('Clone Repository') {
+        stage('Checkout') {
             steps {
-                git url: 'https://github.com/Mehra079/News_Search.git', branch: 'main'
+                // Clone the repository
+                git branch: 'main', url: 'https://github.com/Mehra079/News_Search.git'
             }
         }
         
-        stage('Build Backend') {
+        stage('Backend Build') {
             steps {
-                script {
-                    // Navigate to backend directory and build
-                    sh 'cd backend && mvn clean package -DskipTests'
+                dir('backend') {
+                    // Build backend project
+                    script {
+                        try {
+                            sh './mvnw clean install -DskipTests' // For Linux/MacOS
+                        } catch (Exception e) {
+                            bat 'mvnw.cmd clean install -DskipTests' // For Windows
+                        }
+                    }
                 }
             }
         }
         
-        stage('Build Frontend') {
+        stage('Backend Test') {
             steps {
-                script {
-                    // Navigate to frontend directory and build
-                    sh 'cd frontend && npm install && ng build --prod'
+                dir('backend') {
+                    // Run tests
+                    script {
+                        try {
+                            sh './mvnw test' // For Linux/MacOS
+                        } catch (Exception e) {
+                            bat 'mvnw.cmd test' // For Windows
+                        }
+                    }
                 }
             }
         }
         
-        stage('Dockerize') {
+        stage('Frontend Build') {
             steps {
-                script {
-                    // Build Docker images for backend and frontend
-                    sh 'docker build -t $DOCKER_IMAGE_BACKEND ./backend'
-                    sh 'docker build -t $DOCKER_IMAGE_FRONTEND ./frontend'
+                dir('frontend') {
+                    // Install Node dependencies
+                    script {
+                        try {
+                            sh 'npm install' // For Linux/MacOS
+                        } catch (Exception e) {
+                            bat 'npm install' // For Windows
+                        }
+                    }
+                    // Build the Angular project
+                    script {
+                        try {
+                            sh 'ng build --prod' // For Linux/MacOS
+                        } catch (Exception e) {
+                            bat 'ng build --prod' // For Windows
+                        }
+                    }
                 }
+            }
+        }
+        
+        stage('Archive Artifacts') {
+            steps {
+                // Archive built artifacts (JAR from backend and Angular dist folder)
+                archiveArtifacts artifacts: 'backend/target/*.jar', allowEmptyArchive: true
+                archiveArtifacts artifacts: 'frontend/dist/**/*', allowEmptyArchive: true
             }
         }
 
         stage('Deploy') {
             steps {
-                script {
-                    // Start containers using Docker Compose
-                    sh 'docker-compose up -d'
-                }
+                // Here you can add deployment steps, e.g., Docker build & push, SCP to server, etc.
+                echo 'Deployment step (to be configured based on your deployment target)'
             }
         }
     }
-    
+
     post {
+        always {
+            // Clean up workspace after build
+            cleanWs()
+        }
         success {
-            echo 'Pipeline completed successfully!'
+            echo 'Build completed successfully!'
         }
         failure {
-            echo 'Pipeline failed!'
+            echo 'Build failed. Check logs for details.'
         }
     }
 }
